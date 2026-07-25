@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>彭彭，和我约会吧 💕</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --pink-light: #FFE0EC;
+    --pink-main: #FF8FB1;
+    --pink-deep: #FF6B9D;
+    --purple-light: #E8D5FF;
+    --purple-main: #C77DFF;
+    --purple-deep: #9D4EDD;
+    --white: #FFFFFF;
+    --gray-light: #E0E0E0;
+    --gray-text: #999;
+    --card-shadow: 0 8px 32px rgba(255, 107, 157, 0.15);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #FFC8DD 0%, #FFAFCC 25%, #CDB4DB 75%, #B5EAD7 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  /* 浮动装饰元素 */
+  .decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .deco-1 { top: 5%; left: 5%; animation-delay: 0s; }
+  .deco-2 { top: 10%; right: 8%; animation-delay: 1s; }
+  .deco-3 { bottom: 15%; left: 7%; animation-delay: 2s; }
+  .deco-4 { bottom: 8%; right: 5%; animation-delay: 0.5s; }
+  .deco-5 { top: 40%; left: 3%; animation-delay: 1.5s; }
+  .deco-6 { top: 50%; right: 3%; animation-delay: 2.5s; }
+  .deco-7 { top: 25%; left: 12%; animation-delay: 3s; }
+  .deco-8 { bottom: 30%; right: 10%; animation-delay: 0.8s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+  }
+
+  /* 主容器 */
+  .container {
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 28px;
+    padding: 36px 28px;
+    box-shadow: var(--card-shadow), 0 2px 8px rgba(199, 125, 255, 0.1);
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page.hidden {
+    display: none;
+  }
+
+  .page.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  .page.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-20px) scale(0.95); }
+  }
+
+  /* 天线宝宝头像 */
+  .avatar {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    position: relative;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .avatar svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 标题 */
+  .title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--purple-deep);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .title .heart {
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* 描述文字 */
+  .desc {
+    font-size: 16px;
+    color: var(--gray-text);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    padding: 0 10px;
+  }
+
+  /* 底部小字提示 */
+  .hint {
+    font-size: 13px;
+    color: #BBB;
+    margin-top: 24px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  /* 按钮通用样式 */
+  .btn {
+    padding: 14px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: inherit;
+    letter-spacing: 1px;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #FF8FB1, #FF6B9D);
+    color: white;
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 8px 24px rgba(255, 107, 157, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: var(--gray-light);
+    color: #777;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  /* 按钮组 */
+  .btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  /* 逃跑按钮 */
+  .btn-runaway {
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.3s ease, top 0.3s ease;
+  }
+
+  /* 输入框样式 */
+  .input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .input-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--purple-deep);
+    text-align: left;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid var(--pink-light);
+    border-radius: 16px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--purple-deep);
+    background: white;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .input-field:focus {
+    border-color: var(--pink-main);
+    box-shadow: 0 0 0 4px rgba(255, 143, 177, 0.15);
+  }
+
+  /* 餐饮选项 */
+  .food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+    width: 100%;
+  }
+
+  .food-item {
+    padding: 16px 8px;
+    border: 2px solid var(--pink-light);
+    border-radius: 16px;
+    background: white;
+    font-size: 15px;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .food-item .emoji {
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
+
+  .food-item.selected {
+    background: linear-gradient(135deg, #FF8FB1, #FF6B9D);
+    color: white;
+    border-color: var(--pink-deep);
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+  }
+
+  .food-item:active {
+    transform: scale(0.95);
+  }
+
+  /* 确认卡片 */
+  .confirm-card {
+    background: linear-gradient(135deg, #FFF0F5, #F3E8FF);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    margin: 20px 0;
+    border: 2px solid rgba(255, 143, 177, 0.3);
+    text-align: left;
+  }
+
+  .confirm-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(255, 143, 177, 0.3);
+  }
+
+  .confirm-row:last-child {
+    border-bottom: none;
+  }
+
+  .confirm-label {
+    font-size: 15px;
+    color: var(--gray-text);
+    font-weight: 600;
+  }
+
+  .confirm-value {
+    font-size: 16px;
+    color: var(--purple-deep);
+    font-weight: 700;
+    text-align: right;
+    max-width: 60%;
+  }
+
+  /* 底部文字 */
+  .footer-text {
+    font-size: 15px;
+    color: var(--pink-deep);
+    font-weight: 600;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* 页面进度指示器 */
+  .progress-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 143, 177, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: var(--pink-deep);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* 爱心飘落动画 */
+  .heart-rain {
+    position: fixed;
+    top: -20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* 餐饮选择提示 */
+  .select-hint {
+    font-size: 14px;
+    color: #BBB;
+    margin-top: -16px;
+    margin-bottom: 16px;
+  }
+
+  .selected-count {
+    display: inline-block;
+    background: var(--pink-light);
+    color: var(--pink-deep);
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+
+  /* 日期/时间选择器美化 */
+  input[type="date"], input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: hue-rotate(300deg) saturate(2);
+    cursor: pointer;
+  }
+
+  /* 全宽按钮 */
+  .btn-full {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* 心形装饰 */
+  .heart-deco {
+    color: #FFB3C6;
+    display: inline-block;
+  }
+
+  /* 响应式 */
+  @media (max-width: 380px) {
+    .page {
+      padding: 28px 20px;
+      min-height: 440px;
+    }
+    .title {
+      font-size: 22px;
+    }
+    .food-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .btn {
+      padding: 12px 28px;
+      font-size: 16px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 460px;
+    }
+    .page {
+      min-height: 520px;
+    }
+  }
+
+  /* 音乐控制按钮 */
+  .music-control {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 143, 177, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 107, 157, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9998;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .music-control:active {
+    transform: scale(0.9);
+  }
+
+  .music-control .music-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .music-control.playing .music-icon {
+    animation: musicSpin 3s linear infinite;
+  }
+
+  @keyframes musicSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* 音乐提示气泡 */
+  .music-tip {
+    position: fixed;
+    top: 76px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 14px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--pink-deep);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.15);
+    z-index: 9998;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .music-tip.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .music-tip::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 18px;
+    border: 6px solid transparent;
+    border-bottom-color: rgba(255, 255, 255, 0.92);
+  }
+</style>
+</head>
+<body>
+
+  <!-- 背景音乐 -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="문득.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 音乐控制按钮 -->
+  <div class="music-control" id="musicControl">
+    <span class="music-icon">🎵</span>
+  </div>
+  <div class="music-tip" id="musicTip">点击播放背景音乐 💕</div>
+
+  <!-- 浮动装饰 -->
+  <div class="decoration deco-1" style="font-size: 28px;">🌸</div>
+  <div class="decoration deco-2" style="font-size: 24px;">💕</div>
+  <div class="decoration deco-3" style="font-size: 26px;">⭐</div>
+  <div class="decoration deco-4" style="font-size: 30px;">🌷</div>
+  <div class="decoration deco-5" style="font-size: 22px;">💖</div>
+  <div class="decoration deco-6" style="font-size: 26px;">✨</div>
+  <div class="decoration deco-7" style="font-size: 24px;">🦋</div>
+  <div class="decoration deco-8" style="font-size: 28px;">🍓</div>
+
+  <div class="container">
+
+    <!-- 步骤1：初始邀约页 -->
+    <div class="page fade-in" id="page1">
+      <div class="avatar">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- 天线 -->
+          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
+          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 头部 -->
+          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
+          <!-- 脸颊 -->
+          <circle cx="32" cy="55" r="6" fill="#FF8FB1" opacity="0.5"/>
+          <circle cx="68" cy="55" r="6" fill="#FF8FB1" opacity="0.5"/>
+          <!-- 眼睛 -->
+          <ellipse cx="40" cy="48" rx="3.5" ry="4.5" fill="#5A3E5A"/>
+          <ellipse cx="60" cy="48" rx="3.5" ry="4.5" fill="#5A3E5A"/>
+          <circle cx="41" cy="47" r="1.2" fill="white"/>
+          <circle cx="61" cy="47" r="1.2" fill="white"/>
+          <!-- 嘴巴 -->
+          <path d="M 44 60 Q 50 64 56 60" stroke="#5A3E5A" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- 头顶装饰 -->
+          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="title">彭彭，可以和我<br>一起约会嘛？！<span class="heart">💕</span></h1>
+      <div class="btn-group" id="btnGroup1">
+        <button class="btn btn-primary" id="btnYes">愿意 💗</button>
+        <button class="btn btn-secondary btn-runaway" id="btnNo">不要</button>
+      </div>
+      <p class="hint">系统检测到：对方已经紧张到开始写网页了。<br>（手抖ing...）</p>
+    </div>
+
+    <!-- 步骤2：点击愿意后 -->
+    <div class="page hidden" id="page2">
+      <div class="avatar" style="animation: bounce 1s ease-in-out infinite;">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- 天线 -->
+          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
+          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 头部 -->
+          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
+          <!-- 脸颊 - 惊讶的红晕 -->
+          <circle cx="30" cy="55" r="8" fill="#FF6B9D" opacity="0.4"/>
+          <circle cx="70" cy="55" r="8" fill="#FF6B9D" opacity="0.4"/>
+          <!-- 眼睛 - 惊讶大眼睛 -->
+          <circle cx="40" cy="47" r="5" fill="#5A3E5A"/>
+          <circle cx="60" cy="47" r="5" fill="#5A3E5A"/>
+          <circle cx="42" cy="45" r="1.8" fill="white"/>
+          <circle cx="62" cy="45" r="1.8" fill="white"/>
+          <!-- 嘴巴 - O型惊讶 -->
+          <ellipse cx="50" cy="62" rx="4" ry="5" fill="#5A3E5A"/>
+          <!-- 头顶装饰 -->
+          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- 汗滴 -->
+          <path d="M 78 30 Q 80 35 78 38 Q 76 35 78 30" fill="#87CEEB" opacity="0.8"/>
+        </svg>
+      </div>
+      <h1 class="title">等下，你真的点了<br>愿意？？🤯</h1>
+      <p class="desc">我都已经准备好被你点"不要"了。<br>没想到你是认真的...<br>心跳加速 +100 😳💓</p>
+      <button class="btn btn-primary" id="btnContinue2">好啦好啦 →</button>
+    </div>
+
+    <!-- 步骤3：时间选择页 -->
+    <div class="page hidden" id="page3">
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+      <h1 class="title">所以...你什么时候<br>有空呀？📅</h1>
+      <div class="input-group">
+        <div>
+          <label class="input-label">🌸 选个日子</label>
+          <input type="date" class="input-field" id="dateInput">
+        </div>
+        <div>
+          <label class="input-label">⏰ 选个时间</label>
+          <select class="input-field" id="timeInput">
+            <option value="">请选择时间</option>
+            <option value="12:00">12:00 中午见~</option>
+            <option value="13:00">13:00 午饭后出发</option>
+            <option value="14:00">14:00 下午茶时间</option>
+            <option value="15:00">15:00 阳光正好</option>
+            <option value="16:00">16:00 悠闲午后</option>
+            <option value="17:00">17:00 临近傍晚</option>
+            <option value="18:00">18:00 黄昏时分</option>
+            <option value="19:00">19:00 晚上好呀</option>
+            <option value="20:00">20:00 夜色迷人</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" id="btnConfirmTime">确定时间 ✨</button>
+    </div>
+
+    <!-- 步骤4：餐饮选择页 -->
+    <div class="page hidden" id="page4">
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot active"></div>
+      </div>
+      <h1 class="title">我们吃点什么？🍽️</h1>
+      <p class="select-hint">可以多选哦~ 已选 <span class="selected-count" id="selectedCount">0</span> 个</p>
+      <div class="food-grid" id="foodGrid">
+        <div class="food-item" data-food="披萨"><span class="emoji">🍕</span>披萨</div>
+        <div class="food-item" data-food="寿司"><span class="emoji">🍣</span>寿司</div>
+        <div class="food-item" data-food="火锅"><span class="emoji">🍲</span>火锅</div>
+        <div class="food-item" data-food="烤肉"><span class="emoji">🥩</span>烤肉</div>
+        <div class="food-item" data-food="早茶"><span class="emoji">🥟</span>早茶</div>
+        <div class="food-item" data-food="拉面"><span class="emoji">🍜</span>拉面</div>
+        <div class="food-item" data-food="麻辣烫"><span class="emoji">🌶️</span>麻辣烫</div>
+        <div class="food-item" data-food="小龙虾"><span class="emoji">🦞</span>小龙虾</div>
+        <div class="food-item" data-food="烧烤"><span class="emoji">🔥</span>烧烤</div>
+        <div class="food-item" data-food="其他"><span class="emoji">✨</span>其他</div>
+      </div>
+      <button class="btn btn-primary btn-full" id="btnConfirmFood">就吃这些啦！</button>
+    </div>
+
+    <!-- 步骤5：结果确认页 -->
+    <div class="page hidden" id="page5">
+      <div class="avatar">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- 天线 -->
+          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
+          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 头部 -->
+          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
+          <!-- 脸颊 - 开心的红晕 -->
+          <circle cx="30" cy="55" r="7" fill="#FF6B9D" opacity="0.4"/>
+          <circle cx="70" cy="55" r="7" fill="#FF6B9D" opacity="0.4"/>
+          <!-- 眼睛 - 弯弯的笑眼 -->
+          <path d="M 36 47 Q 40 43 44 47" stroke="#5A3E5A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M 56 47 Q 60 43 64 47" stroke="#5A3E5A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- 嘴巴 - 大大的笑 -->
+          <path d="M 42 58 Q 50 66 58 58" stroke="#5A3E5A" stroke-width="2.5" fill="#FF6B9D" stroke-linecap="round"/>
+          <!-- 头顶装饰 -->
+          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- 旁边的小爱心 -->
+          <text x="80" y="30" font-size="10" fill="#FF6B9D">💕</text>
+          <text x="15" y="35" font-size="8" fill="#FF6B9D">✨</text>
+        </svg>
+      </div>
+      <h1 class="title">真开心你没有拒绝～<br>我会准时来接你！🚗💨</h1>
+      <div class="confirm-card">
+        <div class="confirm-row">
+          <span class="confirm-label">📅 日期</span>
+          <span class="confirm-value" id="resultDate">--</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">⏰ 时间</span>
+          <span class="confirm-value" id="resultTime">--</span>
+        </div>
+        <div class="confirm-row">
+          <span class="confirm-label">🍽️ 餐饮</span>
+          <span class="confirm-value" id="resultFood">--</span>
+        </div>
+      </div>
+      <p class="footer-text">带好胃口，我带好路线。<br>期待和你见面 💕</p>
+    </div>
+
+  </div>
+
+<script>
+(function() {
+  'use strict';
+
+  // 存储用户选择
+  var userChoices = {
+    date: '',
+    time: '',
+    foods: []
+  };
+
+  // 当前页码
+  var currentPage = 1;
+
+  // 页面元素
+  var pages = {
+    1: document.getElementById('page1'),
+    2: document.getElementById('page2'),
+    3: document.getElementById('page3'),
+    4: document.getElementById('page4'),
+    5: document.getElementById('page5')
+  };
+
+  // 切换页面
+  function goToPage(pageNum) {
+    var oldPage = pages[currentPage];
+    var newPage = pages[pageNum];
+
+    oldPage.classList.add('fade-out');
+
+    setTimeout(function() {
+      oldPage.classList.add('hidden');
+      oldPage.classList.remove('fade-out', 'fade-in');
+
+      newPage.classList.remove('hidden');
+      newPage.classList.add('fade-in');
+
+      currentPage = pageNum;
+
+      // 滚动到顶部
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 300);
+  }
+
+  // 爱心飘落效果
+  function createHeartRain() {
+    var hearts = ['💕', '💖', '💗', '💝', '🌸', '✨'];
+    var count = 15;
+    for (var i = 0; i < count; i++) {
+      (function(index) {
+        setTimeout(function() {
+          var heart = document.createElement('div');
+          heart.className = 'heart-rain';
+          heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.fontSize = (16 + Math.random() * 16) + 'px';
+          heart.style.animationDuration = (2 + Math.random() * 3) + 's';
+          heart.style.animationDelay = (Math.random() * 0.5) + 's';
+          document.body.appendChild(heart);
+
+          setTimeout(function() {
+            heart.remove();
+          }, 5000);
+        }, index * 100);
+      })(i);
+    }
+  }
+
+  // ========== 步骤1：逃跑按钮 ==========
+  var btnNo = document.getElementById('btnNo');
+  var btnGroup1 = document.getElementById('btnGroup1');
+  var noClickCount = 0;
+  var noTexts = [
+    '不要',
+    '真的不要？',
+    '再想想嘛~',
+    '别走啊！',
+    '点愿意嘛',
+    '求你了🥺',
+    '点不动了',
+    '点我干嘛'
+  ];
+
+  function moveNoButton() {
+    var groupRect = btnGroup1.getBoundingClientRect();
+    var containerWidth = btnGroup1.offsetWidth;
+    var containerHeight = btnGroup1.offsetHeight + 80;
+
+    // 随机偏移
+    var maxX = containerWidth / 2 + 40;
+    var minX = -containerWidth / 2 - 40;
+    var maxY = 80;
+    var minY = -40;
+
+    var offsetX = Math.random() * (maxX - minX) + minX;
+    var offsetY = Math.random() * (maxY - minY) + minY;
+
+    btnNo.style.transform = 'translate(' + offsetX + 'px, ' + offsetY + 'px)';
+
+    // 换文字
+    noClickCount++;
+    if (noClickCount < noTexts.length) {
+      btnNo.textContent = noTexts[noClickCount];
+    } else {
+      btnNo.textContent = noTexts[noTexts.length - 1];
+    }
+  }
+
+  // 鼠标悬停时逃跑（桌面端）
+  btnNo.addEventListener('mouseenter', moveNoButton);
+
+  // 鼠标移动靠近时逃跑
+  btnNo.addEventListener('mousemove', function(e) {
+    e.preventDefault();
+  });
+
+  // 点击"不要"也逃跑（移动端触屏）
+  btnNo.addEventListener('click', function(e) {
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  // 触摸开始时逃跑（移动端）
+  btnNo.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    moveNoButton();
+  }, { passive: false });
+
+  // ========== 步骤1：点击愿意 ==========
+  document.getElementById('btnYes').addEventListener('click', function() {
+    createHeartRain();
+    goToPage(2);
+  });
+
+  // ========== 步骤2：继续 ==========
+  document.getElementById('btnContinue2').addEventListener('click', function() {
+    goToPage(3);
+    initDatePicker();
+  });
+
+  // ========== 步骤3：时间选择 ==========
+  function initDatePicker() {
+    var today = new Date();
+    var tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    var yyyy = tomorrow.getFullYear();
+    var mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    var dd = String(tomorrow.getDate()).padStart(2, '0');
+    var defaultDate = yyyy + '-' + mm + '-' + dd;
+
+    var dateInput = document.getElementById('dateInput');
+    dateInput.value = defaultDate;
+    dateInput.min = today.toISOString().split('T')[0];
+
+    // 默认选中一个时间
+    document.getElementById('timeInput').value = '18:00';
+  }
+
+  document.getElementById('btnConfirmTime').addEventListener('click', function() {
+    var dateVal = document.getElementById('dateInput').value;
+    var timeVal = document.getElementById('timeInput').value;
+
+    if (!dateVal) {
+      shakeElement(document.getElementById('dateInput'));
+      return;
+    }
+    if (!timeVal) {
+      shakeElement(document.getElementById('timeInput'));
+      return;
+    }
+
+    userChoices.date = dateVal;
+    userChoices.time = timeVal;
+    goToPage(4);
+  });
+
+  // 抖动动画
+  function shakeElement(el) {
+    el.style.animation = 'none';
+    el.offsetHeight; // 触发重排
+    el.style.animation = 'shake 0.4s ease';
+    el.style.borderColor = '#FF6B9D';
+    setTimeout(function() {
+      el.style.animation = '';
+    }, 400);
+  }
+
+  // 添加抖动动画
+  var style = document.createElement('style');
+  style.textContent = '@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }';
+  document.head.appendChild(style);
+
+  // ========== 步骤4：餐饮选择 ==========
+  var foodItems = document.querySelectorAll('.food-item');
+  var selectedCount = document.getElementById('selectedCount');
+
+  foodItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+      var foodName = this.getAttribute('data-food');
+
+      if (this.classList.contains('selected')) {
+        this.classList.remove('selected');
+        var idx = userChoices.foods.indexOf(foodName);
+        if (idx > -1) {
+          userChoices.foods.splice(idx, 1);
+        }
+      } else {
+        this.classList.add('selected');
+        userChoices.foods.push(foodName);
+      }
+
+      selectedCount.textContent = userChoices.foods.length;
+    });
+  });
+
+  document.getElementById('btnConfirmFood').addEventListener('click', function() {
+    if (userChoices.foods.length === 0) {
+      // 没选的话抖动提示
+      foodItems.forEach(function(item) {
+        shakeElement(item);
+      });
+      return;
+    }
+
+    // 更新结果页
+    document.getElementById('resultDate').textContent = formatDate(userChoices.date);
+    document.getElementById('resultTime').textContent = userChoices.time;
+    document.getElementById('resultFood').textContent = userChoices.foods.join('、');
+
+    createHeartRain();
+    goToPage(5);
+  });
+
+  // 格式化日期显示
+  function formatDate(dateStr) {
+    var parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return parts[0] + '年' + parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
+    }
+    return dateStr;
+  }
+
+  // 防止双击缩放
+  document.addEventListener('touchend', function(e) {
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+  var lastTouchEnd = 0;
+
+  // 防止页面缩放
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  });
+
+  // ========== 背景音乐控制（自动播放 + 静音切换）==========
+  var bgMusic = document.getElementById('bgMusic');
+  var musicControl = document.getElementById('musicControl');
+  var musicTip = document.getElementById('musicTip');
+  var musicIcon = musicControl.querySelector('.music-icon');
+  var isMuted = false;
+  var hasAutoPlayed = false;
+
+  // 设置音量
+  bgMusic.volume = 0.4;
+
+  function showMusicTip(text, duration) {
+    musicTip.textContent = text;
+    musicTip.classList.add('show');
+    clearTimeout(musicTip._timer);
+    musicTip._timer = setTimeout(function() {
+      musicTip.classList.remove('show');
+    }, duration || 2500);
+  }
+
+  // 更新图标状态
+  function updateMusicIcon() {
+    if (isMuted) {
+      musicIcon.textContent = '🔇';
+      musicControl.classList.remove('playing');
+    } else {
+      musicIcon.textContent = '🔊';
+      musicControl.classList.add('playing');
+    }
+  }
+
+  // 尝试自动播放（浏览器策略：需要用户交互后才允许）
+  function tryAutoPlay() {
+    if (hasAutoPlayed) return;
+    var playPromise = bgMusic.play();
+    if (playPromise !== undefined) {
+      playPromise.then(function() {
+        hasAutoPlayed = true;
+        isMuted = false;
+        bgMusic.muted = false;
+        updateMusicIcon();
+        showMusicTip('🎵 正在播放：문득', 2000);
+      }).catch(function() {
+        // 被浏览器阻止，等待下次交互再试
+      });
+    }
+  }
+
+  // 页面加载后立即尝试播放（部分浏览器允许）
+  tryAutoPlay();
+
+  // 首次用户交互时自动播放
+  document.addEventListener('click', tryAutoPlay);
+  document.addEventListener('touchstart', tryAutoPlay, { passive: true });
+  document.addEventListener('keydown', tryAutoPlay);
+
+  // 点击按钮 = 静音/取消静音（不停止播放）
+  musicControl.addEventListener('click', function(e) {
+    e.stopPropagation();
+    // 如果还没自动播放成功，先尝试播放
+    if (!hasAutoPlayed) {
+      tryAutoPlay();
+      return;
+    }
+    isMuted = !isMuted;
+    bgMusic.muted = isMuted;
+    updateMusicIcon();
+    if (isMuted) {
+      showMusicTip('已静音 🔇', 1500);
+    } else {
+      showMusicTip('🎵 正在播放：문득', 1500);
+    }
+  });
+
+  // 页面加载后提示
+  setTimeout(function() {
+    if (!hasAutoPlayed) {
+      showMusicTip('点击页面任意处开始播放音乐 💕', 3000);
+    }
+  }, 1000);
+
+})();
+</script>
+</body>
+</html>
