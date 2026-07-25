@@ -123,9 +123,13 @@
     50% { transform: translateY(-8px); }
   }
 
-  .avatar svg {
+  .avatar img, .avatar-img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 16px rgba(255, 107, 157, 0.25);
   }
 
   /* 标题 */
@@ -558,25 +562,7 @@
     <!-- 步骤1：初始邀约页 -->
     <div class="page fade-in" id="page1">
       <div class="avatar">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <!-- 天线 -->
-          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
-          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 头部 -->
-          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
-          <!-- 脸颊 -->
-          <circle cx="32" cy="55" r="6" fill="#FF8FB1" opacity="0.5"/>
-          <circle cx="68" cy="55" r="6" fill="#FF8FB1" opacity="0.5"/>
-          <!-- 眼睛 -->
-          <ellipse cx="40" cy="48" rx="3.5" ry="4.5" fill="#5A3E5A"/>
-          <ellipse cx="60" cy="48" rx="3.5" ry="4.5" fill="#5A3E5A"/>
-          <circle cx="41" cy="47" r="1.2" fill="white"/>
-          <circle cx="61" cy="47" r="1.2" fill="white"/>
-          <!-- 嘴巴 -->
-          <path d="M 44 60 Q 50 64 56 60" stroke="#5A3E5A" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- 头顶装饰 -->
-          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
-        </svg>
+        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
       </div>
       <h1 class="title">彭彭，可以和我<br>一起约会嘛？！<span class="heart">💕</span></h1>
       <div class="btn-group" id="btnGroup1">
@@ -589,27 +575,7 @@
     <!-- 步骤2：点击愿意后 -->
     <div class="page hidden" id="page2">
       <div class="avatar" style="animation: bounce 1s ease-in-out infinite;">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <!-- 天线 -->
-          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
-          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 头部 -->
-          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
-          <!-- 脸颊 - 惊讶的红晕 -->
-          <circle cx="30" cy="55" r="8" fill="#FF6B9D" opacity="0.4"/>
-          <circle cx="70" cy="55" r="8" fill="#FF6B9D" opacity="0.4"/>
-          <!-- 眼睛 - 惊讶大眼睛 -->
-          <circle cx="40" cy="47" r="5" fill="#5A3E5A"/>
-          <circle cx="60" cy="47" r="5" fill="#5A3E5A"/>
-          <circle cx="42" cy="45" r="1.8" fill="white"/>
-          <circle cx="62" cy="45" r="1.8" fill="white"/>
-          <!-- 嘴巴 - O型惊讶 -->
-          <ellipse cx="50" cy="62" rx="4" ry="5" fill="#5A3E5A"/>
-          <!-- 头顶装饰 -->
-          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- 汗滴 -->
-          <path d="M 78 30 Q 80 35 78 38 Q 76 35 78 30" fill="#87CEEB" opacity="0.8"/>
-        </svg>
+        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
       </div>
       <h1 class="title">等下，你真的点了<br>愿意？？🤯</h1>
       <p class="desc">我都已经准备好被你点"不要"了。<br>没想到你是认真的...<br>心跳加速 +100 😳💓</p>
@@ -677,26 +643,7 @@
     <!-- 步骤5：结果确认页 -->
     <div class="page hidden" id="page5">
       <div class="avatar">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <!-- 天线 -->
-          <circle cx="50" cy="8" r="4" fill="#FF6B9D"/>
-          <line x1="50" y1="12" x2="50" y2="25" stroke="#FF8FB1" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 头部 -->
-          <ellipse cx="50" cy="50" rx="32" ry="30" fill="#FFB3D1"/>
-          <!-- 脸颊 - 开心的红晕 -->
-          <circle cx="30" cy="55" r="7" fill="#FF6B9D" opacity="0.4"/>
-          <circle cx="70" cy="55" r="7" fill="#FF6B9D" opacity="0.4"/>
-          <!-- 眼睛 - 弯弯的笑眼 -->
-          <path d="M 36 47 Q 40 43 44 47" stroke="#5A3E5A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <path d="M 56 47 Q 60 43 64 47" stroke="#5A3E5A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <!-- 嘴巴 - 大大的笑 -->
-          <path d="M 42 58 Q 50 66 58 58" stroke="#5A3E5A" stroke-width="2.5" fill="#FF6B9D" stroke-linecap="round"/>
-          <!-- 头顶装饰 -->
-          <path d="M 35 25 Q 50 18 65 25" stroke="#FF8FB1" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- 旁边的小爱心 -->
-          <text x="80" y="30" font-size="10" fill="#FF6B9D">💕</text>
-          <text x="15" y="35" font-size="8" fill="#FF6B9D">✨</text>
-        </svg>
+        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
       </div>
       <h1 class="title">真开心你没有拒绝～<br>我会准时来接你！🚗💨</h1>
       <div class="confirm-card">
