@@ -1,0 +1,11 @@
+{
+  "name": "dating-invite",
+  "version": "1.0.0",
+  "description": "约会邀请 - 服务器端数据存储",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -127,7 +127,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 18%;
+    object-position: center center;
     border-radius: 50%;
     border: 3px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 16px rgba(255, 107, 157, 0.25);
@@ -533,6 +533,46 @@
     border: 6px solid transparent;
     border-bottom-color: rgba(255, 255, 255, 0.92);
   }
+
+  /* 首页记录入口 */
+  .record-entry {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--pink-deep);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 18px;
+    border-radius: 20px;
+    background: rgba(255, 143, 177, 0.1);
+    border: 1.5px dashed rgba(255, 143, 177, 0.4);
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    display: inline-block;
+  }
+
+  .record-entry:hover, .record-entry:active {
+    background: rgba(255, 143, 177, 0.2);
+    border-color: var(--pink-main);
+  }
+
+  /* page5 返回按钮 */
+  .history-back {
+    margin-top: 20px;
+  }
+
+  /* 保存状态提示 */
+  .save-status {
+    font-size: 13px;
+    color: #4CAF50;
+    margin-top: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .save-status.show {
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
@@ -563,7 +603,7 @@
     <!-- 步骤1：初始邀约页 -->
     <div class="page fade-in" id="page1">
       <div class="avatar">
-        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
+        <img src="teletubbies-po.jpg" class="avatar-img" alt="天线宝宝">
       </div>
       <h1 class="title">彭彭，可以和我<br>一起约会嘛？！<span class="heart">💕</span></h1>
       <div class="btn-group" id="btnGroup1">
@@ -571,12 +611,13 @@
         <button class="btn btn-secondary btn-runaway" id="btnNo">不要</button>
       </div>
       <p class="hint">系统检测到：对方已经紧张到开始写网页了。<br>（手抖ing...）</p>
+      <div class="record-entry" id="btnHistory">📋 查看上次的约会</div>
     </div>
 
     <!-- 步骤2：点击愿意后 -->
     <div class="page hidden" id="page2">
       <div class="avatar" style="animation: bounce 1s ease-in-out infinite;">
-        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
+        <img src="teletubbies-po.jpg" class="avatar-img" alt="天线宝宝">
       </div>
       <h1 class="title">等下，你真的点了<br>愿意？？🤯</h1>
       <p class="desc">我都已经准备好被你点"不要"了。<br>没想到你是认真的...<br>心跳加速 +100 😳💓</p>
@@ -641,12 +682,12 @@
       <button class="btn btn-primary btn-full" id="btnConfirmFood">就吃这些啦！</button>
     </div>
 
-    <!-- 步骤5：结果确认页 -->
+    <!-- 步骤5：结果确认页（也是查看记录页） -->
     <div class="page hidden" id="page5">
       <div class="avatar">
-        <img src="teletubbies-po.png" class="avatar-img" alt="天线宝宝">
+        <img src="teletubbies-po.jpg" class="avatar-img" alt="天线宝宝">
       </div>
-      <h1 class="title">真开心你没有拒绝～<br>我会准时来接你！🚗💨</h1>
+      <h1 class="title" id="page5Title">真开心你没有拒绝～<br>我们一起约会吧！❤️</h1>
       <div class="confirm-card">
         <div class="confirm-row">
           <span class="confirm-label">📅 日期</span>
@@ -661,8 +702,12 @@
           <span class="confirm-value" id="resultFood">--</span>
         </div>
       </div>
-      <p class="footer-text">带好胃口，我带好路线。<br>期待和你见面 💕</p>
+      <p class="footer-text" id="page5Footer">带好胃口，我带好路线。<br>期待和你见面 💕</p>
+      <p class="save-status" id="saveStatus">✅ 已保存到服务器</p>
+      <button class="btn btn-secondary history-back" id="btnPage5Back">← 返回首页</button>
     </div>
+
+
 
   </div>
 
@@ -891,13 +936,18 @@
       return;
     }
 
-    // 更新结果页
+    // 更新结果页 — 确认模式
+    document.getElementById('page5Title').innerHTML = '真开心你没有拒绝～<br>我会准时来接你！🚗💨';
     document.getElementById('resultDate').textContent = formatDate(userChoices.date);
     document.getElementById('resultTime').textContent = userChoices.time;
     document.getElementById('resultFood').textContent = userChoices.foods.join('、');
+    document.getElementById('page5Footer').textContent = '带好胃口，我带好路线。\n期待和你见面 💕';
 
     createHeartRain();
     goToPage(5);
+
+    // 自动保存到服务器
+    saveRecordToServer(userChoices.date, userChoices.time, userChoices.foods);
   });
 
   // 格式化日期显示
@@ -1004,6 +1054,87 @@
       showMusicTip('点击页面任意处开始播放音乐 💕', 3000);
     }
   }, 1000);
+
+  // ========== 服务器 API 通信（单条记录） ==========
+
+  // 保存记录到服务器（始终覆盖，只保留一条）
+  function saveRecordToServer(date, time, foods) {
+    fetch('/api/records', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: date, time: time, foods: foods })
+    })
+    .then(function(res) {
+      if (res.ok) {
+        var status = document.getElementById('saveStatus');
+        if (status) {
+          status.classList.add('show');
+          setTimeout(function() { status.classList.remove('show'); }, 3000);
+        }
+        checkHistoryBtn();
+      }
+    })
+    .catch(function(err) {
+      console.error('保存失败:', err);
+    });
+  }
+
+  // 获取当前记录（null 表示没有记录）
+  function fetchRecord(callback) {
+    fetch('/api/records')
+      .then(function(res) { return res.json(); })
+      .then(function(record) { callback(null, record); })
+      .catch(function(err) { callback(err, null); });
+  }
+
+  // 删除记录
+  function deleteRecord(callback) {
+    fetch('/api/records', { method: 'DELETE' })
+      .then(function(res) { return res.json(); })
+      .then(function(data) { callback(null, data); })
+      .catch(function(err) { callback(err, null); });
+  }
+
+  // ========== 查看记录（复用 page5） ==========
+
+  // 首页「查看上次的约会」→ 从服务器拉数据显示在 page5
+  document.getElementById('btnHistory').addEventListener('click', function() {
+    // 切换到 page5，先显示加载中
+    document.getElementById('page5Title').innerHTML = '📋 上次的约会';
+    document.getElementById('page5Footer').textContent = '加载中...';
+    document.getElementById('resultDate').textContent = '--';
+    document.getElementById('resultTime').textContent = '--';
+    document.getElementById('resultFood').textContent = '--';
+    document.getElementById('saveStatus').classList.remove('show');
+    goToPage(5);
+
+    fetchRecord(function(err, record) {
+      if (err || !record) {
+        document.getElementById('page5Footer').textContent = '还没有约会记录，快去邀请ta吧 💕';
+        return;
+      }
+      document.getElementById('resultDate').textContent = formatDate(record.date);
+      document.getElementById('resultTime').textContent = record.time;
+      document.getElementById('resultFood').textContent = record.foods.join('、');
+      var createdAt = new Date(record.createdAt).toLocaleString('zh-CN');
+      document.getElementById('page5Footer').textContent = '保存于 ' + createdAt;
+    });
+  });
+
+  // page5 的返回按钮
+  document.getElementById('btnPage5Back').addEventListener('click', function() {
+    goToPage(1);
+  });
+
+  // 清空记录按钮（在查看页显示）
+  document.getElementById('btnPage5Back').addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    if (confirm('确定要删除这条约会记录吗？')) {
+      deleteRecord(function(err) {
+        if (!err) { goToPage(1); }
+      });
+    }
+  });
 
 })();
 </script>
