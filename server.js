@@ -70,7 +70,7 @@ app.delete('/api/records', (req, res) => {
 });
 
 // ========== 启动服务 ==========
-app.listen(PORT, () => {
+app.listen(PORT, '127.0.0.1', () => {
   console.log(`💕 约会邀请服务器已启动 → http://localhost:${PORT}`);
   ensureDataFile();
 });
